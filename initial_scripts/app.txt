@@ -1,0 +1,59 @@
+CREATE SCHEMA `chat_app` ;
+
+
+//users TABLE
+CREATE TABLE `chat_app`.`user_details` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(45) NULL,
+  `user_mail` VARCHAR(45) NULL,
+  `last_seen` VARCHAR(45) NULL,
+  `groups` JSON NULL,
+  `im` JSON NULL,
+  `threads` JSON NULL,
+  PRIMARY KEY (`user_id`));
+
+
+CREATE TABLE `chat_app`.`groups` (
+  `group_id` INT NOT NULL AUTO_INCREMENT,
+  `members` JSON NULL,
+  `created_by` VARCHAR(100) NULL,
+  `created` VARCHAR(45) NULL,
+  PRIMARY KEY (`group_id`));
+
+// creating group_chat_messages
+
+CREATE TABLE `chat_app`.`group_chat_messages` (
+  `caht_id` INT NOT NULL AUTO_INCREMENT,
+  `group_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `time` VARCHAR(45) NULL,
+  `message` LONGTEXT NULL,
+  PRIMARY KEY (`caht_id`));
+
+
+searching an array in json_array 
+
+SELECT * FROM chat_app.groups as parent where json_contains(`members`, '[3]');
+
+updating a json array 
+
+update chat_app.groups as parent set parent.members = JSON_ARRAY_APPEND(parent.members, '$', 1)  WHERE group_id=1;
+
+//creating an new user
+INSERT INTO `chat_app`.`user_details` (`user_name`, `user_mail`, `last_seen`, `im`, `threads`, `groups`) VALUES ('Raj', 'raj@test.com', '', '[]', '[]', '[]');
+
+// inserting meesage in group chat_app
+
+INSERT INTO `chat_app`.`group_chat_messages` (`group_id`, `user_id`, `time`, `message`) VALUES ('1', '1', '1563094614 ', 'test message');
+
+// creating im_chat_messages
+CREATE TABLE `chat_app`.`im_caht_messages` (
+  `caht_id` INT NOT NULL AUTO_INCREMENT,
+  `users_id` VARCHAR(100) NOT NULL,
+  `message` LONGTEXT NULL,
+  `time` VARCHAR(45) NULL,
+  `from_user` INT NULL,
+  PRIMARY KEY (`caht_id`));
+
+
+  SELECT * FROM chat_app.user_details as parent left join chat_app.user_details as child on json_contains(parent.im, CAST(child.user_id as JSON), '$') where parent.user_id = 1;
