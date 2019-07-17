@@ -1,6 +1,7 @@
 "use strict";
 const BaseRepo = require('../DB/baseRepo');
 
+
 class Repo extends BaseRepo {
     constructor() {
         super();
@@ -26,7 +27,7 @@ class Repo extends BaseRepo {
         const resultInitialGroupDetails = await this.executeQuery(createInitialGroupQuery, [params.userId]);
         const retrurnResult = resultInitialImDetails;
         retrurnResult.im_users = JSON.parse(retrurnResult.im_users);
-        retrurnResult.groups = resultInitialGroupDetails;
+        retrurnResult.groups = resultInitialGroupDetails;        
         return retrurnResult;  
     }
 }
