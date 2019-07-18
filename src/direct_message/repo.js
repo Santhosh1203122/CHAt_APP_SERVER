@@ -7,9 +7,8 @@ class Repo extends BaseRepo {
         this.query = {
             getUserName: 'select user_name as userName from user_details as parent where parent.user_id = ?',
             createDirectMessage: `UPDATE user_details set im = JSON_ARRAY_APPEND(im, '$', ?)  WHERE user_id=?`,
-            sendDirectMessage: `INSERT INTO im_chat_messages (users_id, message, time, from_user) VALUES (?, ?, ?, ?)`,
-            getImMessageForUsers: 'SELECT parent.*, child.user_name as userName FROM chat_app.im_chat_messages as parent left outer join chat_app.user_details as child on child.user_id = ? where users_id = ? order by parent.time',
-            getNoOfVideos: 'SELECT COUNT(*) as count FROM video_app.video_list'
+            sendDirectMessage: `INSERT INTO im_chat_messages (users_id, message, time, from_user, threads_count) VALUES (?, ?, ?, ?, ?)`,
+            getImMessageForUsers: 'SELECT parent.*, child.user_name as userName FROM chat_app.im_chat_messages as parent left outer join chat_app.user_details as child on child.user_id = ? where users_id = ? order by parent.time'
         }
     }
     async createDirectMessage(params) {
@@ -20,7 +19,7 @@ class Repo extends BaseRepo {
     }
     async sendDirectMessage(params) {
         const sendDirectMessageeQuery = this.query['sendDirectMessage'];
-        const result = await this.executeQuery(sendDirectMessageeQuery, [params.id, params.message, params.time, params.fromUser]);
+        const result = await this.executeQuery(sendDirectMessageeQuery, [params.id, params.message, params.time, params.fromUser, 0]);
         if(result.affectedRows === 1) {
             const getUserQuery = this.query['getUserName']
             const [userResult] = await this.executeQuery(getUserQuery, [params.fromUser]);

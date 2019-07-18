@@ -32,10 +32,18 @@ class InitialService {
             return data;
         });
     }
+
+    async sendThreadMessage(params) {
+        return await repo.sendThreadMessage(params).then(data => {
+            return data;
+        });
+    }
     
-    
-    
-    
+    async getThreadMessage(params) {
+        return await repo.getThreadMessage(params).then(data => {
+            return data;
+        });
+    }
 }
 
 module.exports = new InitialService();

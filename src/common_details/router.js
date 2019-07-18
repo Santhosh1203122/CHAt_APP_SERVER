@@ -27,8 +27,10 @@ router.get("/getInitialDetails", async (req, res) => {
         }
         if (resp.im_users) {
             resp.im_users.forEach(user => {
-                const ids = { resp_user_id: resp.user_id, user_user_id: user.user_id }
-                createNameSpace(ids, 'Im/')
+                if (resp.user_id && user.user_id) {
+                    const ids = { resp_user_id: resp.user_id, user_user_id: user.user_id }
+                    createNameSpace(ids, 'Im/')
+                }
             });
         }
         if (resp.user_id) {
@@ -43,9 +45,12 @@ router.get("/getInitialDetails", async (req, res) => {
 router.post("/createIm", async (req, res) => {
     try {
         let resp = await service.createIm(req.body);
-        const ids = { resp_user_id: resp.user_id, user_user_id: resp.updateFromUser };
+        const ids = { resp_user_id: resp.user_id, user_user_id: resp.to_user };
         createNameSpace(ids, 'Im/');
-        webSocket.emitNewImToUser('User/' + resp.user_id, resp);
+        const payloadData =  Object.assign({}, resp);
+        payloadData.user_name = payloadData.from_user_name
+        webSocket.emitNewImToUser('User/' + resp.to_user, payloadData);
+        resp.user_id = resp.to_user;
         res.send(resp);
     } catch (err) {
         res.status(500).send({ error: err });
@@ -55,13 +60,13 @@ router.post("/createIm", async (req, res) => {
 router.post("/createGroup", async (req, res) => {
     try {
         let resp = await service.createGroup(req.body);
-        if(resp) {
+        if (resp) {
             createNameSpace(resp.group_id, 'Groups/');
         }
-        if(resp.members) {
+        if (resp.members) {
             resp.members.forEach(member => {
                 webSocket.emitNewGroupToUser('User/' + member, resp);
-            });            
+            });
         }
         res.send(resp);
     } catch (err) {
@@ -90,19 +95,38 @@ router.get("/getChannelDetails", async (req, res) => {
 router.post("/updateGroup", async (req, res) => {
     try {
         let resp = await service.updateGroup(req.body);
-        if(resp) {
-            createNameSpace(resp.group_id, 'Groups/');
+        if (resp) {
+            createNameSpace(resp.id, 'Groups/');
         }
-        if(resp.members) {
+        if (resp.members) {
             resp.members.forEach(member => {
-                webSocket.emitNewGroupToUser('User/' + member, {group_id: member, group_name: resp.groupName});
-            });            
+                webSocket.emitNewGroupToUser('User/' + member, { group_id: resp.id, group_name: resp.groupName });
+            });
         }
         res.send(resp);
     } catch (err) {
         res.status(500).send({ error: err });
     }
-}); 
+});
+
+router.post("/sendThreadMessage", async (req, res) => {
+    try {
+        let resp = await service.sendThreadMessage(req.body);
+        res.send(resp);
+    } catch (err) {
+        res.status(500).send({ error: err });
+    }
+});
+
+router.get("/getThreadMessage", async (req, res) => {
+    try {
+        let resp = await service.getThreadMessage(req.query);
+        res.send(resp);
+    } catch (err) {
+        res.status(500).send({ error: err });
+    }
+});
+
 
 
 

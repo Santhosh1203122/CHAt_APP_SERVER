@@ -1,59 +1,93 @@
-CREATE SCHEMA `chat_app` ;
+-----------------------------------------------------------------------------------------------
+creating the chat_app databse 
+-----------------------------------------------------------------------------------------------
+
+CREATE DATABASE `chat_app` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+-----------------------------------------------------------------------------------------------
+group_chat_messages table creation query 
+-----------------------------------------------------------------------------------------------
+
+CREATE TABLE `group_chat_messages` (
+  `chat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `time` varchar(45) DEFAULT NULL,
+  `message` longtext,
+  `threads_count` int(11) DEFAULT NULL,
+  PRIMARY KEY (`chat_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+SELECT * FROM chat_app.user_details;
 
 
-//users TABLE
-CREATE TABLE `chat_app`.`user_details` (
-  `user_id` INT NOT NULL AUTO_INCREMENT,
-  `user_name` VARCHAR(45) NULL,
-  `user_mail` VARCHAR(45) NULL,
-  `last_seen` VARCHAR(45) NULL,
-  `groups` JSON NULL,
-  `im` JSON NULL,
-  `threads` JSON NULL,
-  PRIMARY KEY (`user_id`));
+-----------------------------------------------------------------------------------------------
+groups table creation query 
+-----------------------------------------------------------------------------------------------
+
+CREATE TABLE `groups` (
+  `group_id` int(11) NOT NULL AUTO_INCREMENT,
+  `members` json DEFAULT NULL,
+  `created_by` varchar(100) DEFAULT NULL,
+  `created` varchar(45) DEFAULT NULL,
+  `group_name` longtext NOT NULL,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-----------------------------------------------------------------------------------------------
+im_chat_messages table creation query 
+-----------------------------------------------------------------------------------------------
+
+CREATE TABLE `im_chat_messages` (
+  `chat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `users_id` varchar(100) NOT NULL,
+  `message` longtext,
+  `time` varchar(45) DEFAULT NULL,
+  `from_user` int(11) DEFAULT NULL,
+  `threads_count` int(11) DEFAULT NULL,
+  PRIMARY KEY (`chat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `chat_app`.`groups` (
-  `group_id` INT NOT NULL AUTO_INCREMENT,
-  `members` JSON NULL,
-  `created_by` VARCHAR(100) NULL,
-  `created` VARCHAR(45) NULL,
-  PRIMARY KEY (`group_id`));
+-----------------------------------------------------------------------------------------------
+thread_messages table creation query 
+-----------------------------------------------------------------------------------------------
 
-// creating group_chat_messages
+CREATE TABLE `thread_messages` (
+  `thread_id` int(11) NOT NULL AUTO_INCREMENT,
+  `chat_id` int(11) DEFAULT NULL,
+  `time` varchar(45) DEFAULT NULL,
+  `message` longtext,
+  `from_user` int(11) DEFAULT NULL,
+  `user_name` longtext,
+  `chat_type` varchar(45) DEFAULT NULL,
+  `group_id` varchar(45) DEFAULT NULL,
+  `users_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`thread_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `chat_app`.`group_chat_messages` (
-  `caht_id` INT NOT NULL AUTO_INCREMENT,
-  `group_id` INT NOT NULL,
-  `user_id` INT NOT NULL,
-  `time` VARCHAR(45) NULL,
-  `message` LONGTEXT NULL,
-  PRIMARY KEY (`caht_id`));
+-----------------------------------------------------------------------------------------------
+user_details table creation query 
+-----------------------------------------------------------------------------------------------
 
-
-searching an array in json_array 
-
-SELECT * FROM chat_app.groups as parent where json_contains(`members`, '[3]');
-
-updating a json array 
-
-update chat_app.groups as parent set parent.members = JSON_ARRAY_APPEND(parent.members, '$', 1)  WHERE group_id=1;
-
-//creating an new user
-INSERT INTO `chat_app`.`user_details` (`user_name`, `user_mail`, `last_seen`, `im`, `threads`, `groups`) VALUES ('Raj', 'raj@test.com', '', '[]', '[]', '[]');
-
-// inserting meesage in group chat_app
-
-INSERT INTO `chat_app`.`group_chat_messages` (`group_id`, `user_id`, `time`, `message`) VALUES ('1', '1', '1563094614 ', 'test message');
-
-// creating im_chat_messages
-CREATE TABLE `chat_app`.`im_caht_messages` (
-  `caht_id` INT NOT NULL AUTO_INCREMENT,
-  `users_id` VARCHAR(100) NOT NULL,
-  `message` LONGTEXT NULL,
-  `time` VARCHAR(45) NULL,
-  `from_user` INT NULL,
-  PRIMARY KEY (`caht_id`));
+CREATE TABLE `user_details` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(45) DEFAULT NULL,
+  `user_mail` varchar(45) DEFAULT NULL,
+  `last_seen` varchar(45) DEFAULT NULL,
+  `im` json DEFAULT NULL,
+  `threads` json DEFAULT NULL,
+  `groups` json DEFAULT NULL,
+  `last_seen_channel` json DEFAULT NULL,
+  `channels_last_seen_details` json DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 
-  SELECT * FROM chat_app.user_details as parent left join chat_app.user_details as child on json_contains(parent.im, CAST(child.user_id as JSON), '$') where parent.user_id = 1;
+-----------------------------------------------------------------------------------------------
+user_details data
+-----------------------------------------------------------------------------------------------
+
+import the  user_details_data.csv provided in the same folder in your mysql workbench
+
+
+

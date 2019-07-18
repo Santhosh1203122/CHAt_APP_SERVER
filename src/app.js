@@ -14,7 +14,7 @@ var cors = require('cors');
 app.use(cors());
 app.use('/api', require('./direct_message/router'));
 app.use('/api', require('./group_message/router'));
-app.use('/api', require('./initial_details/router'));
+app.use('/api', require('./common_details/router'));
 app.use(express.static('images'))
 
 module.exports = app;

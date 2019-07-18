@@ -1,10 +1,7 @@
-// enter the username and password of the database in each js file inside initial_scripts<br>
+Please run the queries propvided inside the initial_script/app.txt file before syatying the propject<br>
 
-step 1: inside initial_scripts open the command promt,<br>
-step 2: run 'node schema.js'<br>
-step 3: run 'node video_list.js'<br>
-step 4: run 'node image_holder.js'<br>
-step 5: run 'node insert_video_list.js'<br>
-step 5: run 'node insert_image_list.js'<br>
+Then import the csv file provide in the same folder<br>
 
-then run node index.js inside the main folder
+Change the database parameters inside the file 'src/DB/pool.js'<br>
+
+Now you are all set to run this chat app
