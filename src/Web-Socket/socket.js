@@ -14,5 +14,11 @@ class WebSocket {
             });
         });
     }
+    emitNewImToUser(nameSpaceId,  val) {
+        io.of(nameSpaceId).emit('Update New Im', val)
+    }
+    emitNewGroupToUser(nameSpaceId,  val) {
+        io.of(nameSpaceId).emit('Update New Group', val)
+    }
 }
 module.exports = WebSocket;

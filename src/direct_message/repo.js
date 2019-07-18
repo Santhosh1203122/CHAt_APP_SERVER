@@ -8,13 +8,14 @@ class Repo extends BaseRepo {
             getUserName: 'select user_name as userName from user_details as parent where parent.user_id = ?',
             createDirectMessage: `UPDATE user_details set im = JSON_ARRAY_APPEND(im, '$', ?)  WHERE user_id=?`,
             sendDirectMessage: `INSERT INTO im_chat_messages (users_id, message, time, from_user) VALUES (?, ?, ?, ?)`,
-            getImMessageForUsers: 'SELECT parent.*, child.user_name as userName FROM chat_app.im_chat_messages as parent left outer join chat_app.user_details as child on child.user_id = ? where users_id = ?',
+            getImMessageForUsers: 'SELECT parent.*, child.user_name as userName FROM chat_app.im_chat_messages as parent left outer join chat_app.user_details as child on child.user_id = ? where users_id = ? order by parent.time',
             getNoOfVideos: 'SELECT COUNT(*) as count FROM video_app.video_list'
         }
     }
     async createDirectMessage(params) {
         const createDirectMessageQuery = this.query['createDirectMessage'];
         const result = await this.executeQuery(createDirectMessageQuery, [params.from, params.toUser]);
+        const appendToUser = await this.executeQuery(createDirectMessageQuery, [params.toUser, Number(params.fromUser)]);
         return result;  
     }
     async sendDirectMessage(params) {

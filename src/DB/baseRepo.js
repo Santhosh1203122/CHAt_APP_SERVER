@@ -12,7 +12,7 @@ class BaseRepo {
         try {
             return await fn(conn);
         } finally {
-            // this.closeConnection(conn);
+            this.closeConnection(conn);
         }
     }
 
