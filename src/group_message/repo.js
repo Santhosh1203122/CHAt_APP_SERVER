@@ -7,8 +7,8 @@ class Repo extends BaseRepo {
         this.query = {
             getUserName: 'select user_name as userName from user_details as parent where parent.user_id = ?',
             sendGroupMessage: `INSERT INTO group_chat_messages (group_id, message, time, user_id, threads_count) VALUES (?, ?, ?, ?, ?)`,
-            getMessageForGroup: `SELECT parent.*, child.user_name as userName FROM chat_app.group_chat_messages as parent left join chat_app.user_details as child on child.user_id = parent.user_id and parent.group_id = ? where parent.group_id = ? order by parent.time`,
-            updateLastSeen: `UPDATE chat_app.user_details as parent SET channels_last_seen_details = JSON_SET(parent.channels_last_seen_details, ?, ?) WHERE user_id= ?`
+            getMessageForGroup: `SELECT parent.*, child.user_name as userName FROM group_chat_messages as parent left join user_details as child on child.user_id = parent.user_id and parent.group_id = ? where parent.group_id = ? order by parent.time`,
+            updateLastSeen: `UPDATE user_details as parent SET channels_last_seen_details = JSON_SET(parent.channels_last_seen_details, ?, ?) WHERE user_id= ?`
         }
     }
 

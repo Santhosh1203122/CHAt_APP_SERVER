@@ -8,7 +8,7 @@ class Repo extends BaseRepo {
             getUserName: 'select user_name as userName from user_details as parent where parent.user_id = ?',
             createDirectMessage: `UPDATE user_details set im = JSON_ARRAY_APPEND(im, '$', ?)  WHERE user_id=?`,
             sendDirectMessage: `INSERT INTO im_chat_messages (users_id, message, time, from_user, threads_count) VALUES (?, ?, ?, ?, ?)`,
-            getImMessageForUsers: 'SELECT parent.*, child.user_name as userName FROM chat_app.im_chat_messages as parent left outer join chat_app.user_details as child on child.user_id = ? where users_id = ? order by parent.time'
+            getImMessageForUsers: 'SELECT parent.*, child.user_name as userName FROM im_chat_messages as parent left outer join user_details as child on child.user_id = ? where users_id = ? order by parent.time'
         }
     }
     async createDirectMessage(params) {

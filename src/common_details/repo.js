@@ -11,24 +11,24 @@ class Repo extends BaseRepo {
               '[',group_concat(JSON_OBJECT('user_id', child.user_id, 'user_name', child.user_name, 'last_seen',child.last_seen)),
               ']'
             ) as im_users 
-            FROM chat_app.user_details as parent
-            left join chat_app.user_details as child on json_contains(parent.im, CAST(child.user_id as JSON), '$') 
+            FROM user_details as parent
+            left join user_details as child on json_contains(parent.im, CAST(child.user_id as JSON), '$') 
             where parent.user_id = ?`,
-            getUsers: 'SELECT * FROM chat_app.user_details where user_name like ?',
-            getUserDetails: 'select parent.user_name as userName from chat_app.user_details as parent where parent.user_id = ?',
-            getGroupDetails: 'SELECT * FROM chat_app.groups where group_id = ?',
-            getUserDetail: 'select * from chat_app.user_details where user_id = ?',
+            getUsers: 'SELECT * FROM user_details where user_name like ?',
+            getUserDetails: 'select parent.user_name as userName from user_details as parent where parent.user_id = ?',
+            getGroupDetails: 'SELECT * FROM groups where group_id = ?',
+            getUserDetail: 'select * from user_details where user_id = ?',
             initialGroupDetails: `SELECT  group_id, group_name
-            FROM chat_app.groups
+            FROM groups
             where json_contains(members, CAST(? as JSON), '$') `,
             createGroup: `INSERT INTO groups (members, created_by, created, group_name) VALUES (JSON_ARRAY(?), ?, ?, ?)`,
             createDirectMessage: `UPDATE user_details set im = JSON_ARRAY_APPEND(im, '$', ?)  WHERE user_id=?`,
             newlyCreatedGroup: 'SELECT * FROM groups ORDER BY group_id DESC LIMIT 1',
             getMembersInGroup: `select members FROM groups where group_id =`,
-            updateGroup: `UPDATE chat_app.groups set members = JSON_ARRAY_APPEND(members, '$', ?)  WHERE group_id= ?`,
-            sendThreadMessageQuery: `INSERT INTO chat_app.thread_messages (chat_id, time, message, from_user, user_name, chat_type, users_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            getThreadMessageQueryForIm: `SELECT * FROM chat_app.thread_messages where chat_id = ? and chat_type = ? and users_id = ?`,
-            getThreadMessageQueryForGroup: `SELECT * FROM chat_app.thread_messages where chat_id = ? and chat_type = ? and group_id = ?`,
+            updateGroup: `UPDATE groups set members = JSON_ARRAY_APPEND(members, '$', ?)  WHERE group_id= ?`,
+            sendThreadMessageQuery: `INSERT INTO thread_messages (chat_id, time, message, from_user, user_name, chat_type, users_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            getThreadMessageQueryForIm: `SELECT * FROM thread_messages where chat_id = ? and chat_type = ? and users_id = ?`,
+            getThreadMessageQueryForGroup: `SELECT * FROM thread_messages where chat_id = ? and chat_type = ? and group_id = ?`,
             updateThreadCountForGroup:`UPDATE group_chat_messages SET threads_count= threads_count + 1 WHERE chat_id=?`,
             updateThreadCountForIm: `UPDATE im_chat_messages SET threads_count= threads_count + 1 WHERE chat_id=?`
 
