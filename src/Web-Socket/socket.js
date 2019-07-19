@@ -1,9 +1,7 @@
 "use strict"
-const express = require('express');
-const app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-io.listen(3002);
+
+var io = require('socket.io')(http, { path: '/connectSocket/socket.io'});
+
 class WebSocket {
     createNewNameSpace (nameSpace){
         console.log(nameSpace);
