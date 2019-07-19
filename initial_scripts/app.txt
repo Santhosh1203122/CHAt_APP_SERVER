@@ -82,6 +82,7 @@ CREATE TABLE `user_details` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
+gcsgt9ttu4riqvpt
 
 -----------------------------------------------------------------------------------------------
 user_details data
