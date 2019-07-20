@@ -1,1 +1,1 @@
-web: node index.js
+web: SET PORT=3001 && node index.js
